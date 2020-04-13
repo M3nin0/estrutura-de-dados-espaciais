@@ -1,6 +1,7 @@
 #include <cstddef>
 #include "sort.hpp"
 
+
 void insertionSort(double elements[], std::size_t size)
 {
     for (std::size_t i = 1; i < size; ++i)
