@@ -1,6 +1,7 @@
 #include <vector>
 #include <iostream>
 #include "sort.hpp"
+#include "../benchmark/pbenchmark.hpp"
 
 
 inline void printVec(std::vector<double> vec)
@@ -17,11 +18,19 @@ inline void printVec(std::vector<double> vec)
 
 int main()
 {
-    std::vector<double> vec {6, 7, 8, 9, 2, 1, 5, 3, 65, 45, 54};
+    {
+        PBanchmark::Timer timer("MergeSort com 11 elementos");
+        std::vector<double> vec {6, 7, 8, 9, 2, 1, 5, 3, 65, 45, 54};
+        
+        mergeSort(vec, 0, vec.size() - 1);
+    }
+    {
+        PBanchmark::Timer timer("MergeSort com 22 elementos");
+        std::vector<double> vec {6, 7, 8, 9, 2, 1, 5, 3, 65, 45, 54,
+                                6, 7, 8, 9, 2, 1, 5, 3, 65, 45, 54};
 
-    printVec(vec);
-    mergeSort(vec, 0, vec.size() - 1);
-    printVec(vec);
+        mergeSort(vec, 0, vec.size() - 1);
+    }
 
     return 0;
 }
