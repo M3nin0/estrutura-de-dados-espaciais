@@ -22,7 +22,8 @@ void merge(std::vector<double>& vec, std::size_t left, std::size_t mid, std::siz
     std::vector<double> leftVec = select(vec, left, mid);
     std::vector<double> rightVec = select(vec, mid + 1, right);
 
-    // adição dos sentinelas
+    // adição dos sentinelas para evitar problemas com
+    // lados vazios
     double sentinel = std::numeric_limits<double>::max();
     leftVec.push_back(sentinel);
     rightVec.push_back(sentinel);

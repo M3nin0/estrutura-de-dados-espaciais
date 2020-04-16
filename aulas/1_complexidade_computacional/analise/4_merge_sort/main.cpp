@@ -19,6 +19,18 @@ inline void printVec(std::vector<double> vec)
 int main()
 {
     {
+        PBanchmark::Timer timer("MergeSort com 5 elementos");
+        std::vector<double> vec {6, 7, 8, 9, 2};
+
+        mergeSort(vec, 0, vec.size() - 1);
+    }
+    {
+        PBanchmark::Timer timer("MergeSort com 8 elementos");
+        std::vector<double> vec {6, 7, 8, 9, 2, 65, 45, 54};
+
+        mergeSort(vec, 0, vec.size() - 1);
+    }
+    {
         PBanchmark::Timer timer("MergeSort com 11 elementos");
         std::vector<double> vec {6, 7, 8, 9, 2, 1, 5, 3, 65, 45, 54};
         
