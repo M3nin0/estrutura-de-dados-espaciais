@@ -67,8 +67,8 @@ list<T>::~list()
     clear();
 }
 
-template<class T> typename
-list<T>::item* list<T>::find(T data) const
+template<class T> typename list<T>::item* 
+list<T>::find(T data) const
 {
     item *i = sentinel_.next;
 
@@ -84,8 +84,8 @@ T list<T>::retrieve(list<T>::item *pos)
     return pos->data;
 }
 
-template<class T> typename
-list<T>::item* list<T>::insert(list<T>::item *pos, T data)
+template<class T> typename list<T>::item* 
+list<T>::insert(list<T>::item *pos, T data)
 {
     assert(pos);
 
@@ -130,28 +130,28 @@ inline bool list<T>::empty() const
     return (sentinel_.next == end());
 }
 
-template<class T> typename
-list<T>::item* list<T>::next(item *pos) const
+template<class T> typename list<T>::item* 
+list<T>::next(item *pos) const
 {
     assert(pos);
     return pos->next;
 }
 
-template<class T> typename
-list<T>::item* list<T>::previous(item *pos) const
+template<class T> typename list<T>::item*
+list<T>::previous(item *pos) const
 {
     assert(pos);
     return pos->prev;
 }
 
-template<class T> typename
-list<T>::item* list<T>::begin() const
+template<class T> typename list<T>::item* 
+list<T>::begin() const
 {
     return sentinel_.next;
 }
 
-template<class T> typename
-list<T>::item* list<T>::end() const
+template<class T> typename list<T>::item* 
+list<T>::end() const
 {
     // rev const_cast
     return const_cast<item*>(&sentinel_);
