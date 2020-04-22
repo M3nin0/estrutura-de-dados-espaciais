@@ -109,4 +109,31 @@ inline bool list<T>::empty() const
     return (sentinel_.next == end());
 }
 
+template<class T> typename
+list<T>::item* list<T>::next(item *pos) const
+{
+    assert(pos);
+    return pos->next;
+}
+
+template<class T> typename
+list<T>::item* list<T>::previous(item *pos) const
+{
+    assert(pos);
+    return pos->prev;
+}
+
+template<class T> typename
+list<T>::item* list<T>::begin() const
+{
+    return sentinel_.next;
+}
+
+template<class T> typename
+list<T>::item* list<T>::end() const
+{
+    // rev const_cast
+    return const_cast<item*>(&sentinel_);
+}
+
 #endif
