@@ -33,6 +33,10 @@ public:
     bool empty() const;
 private:
     item sentinel_;
+
+    // evitando cópias
+    list(list&);
+    list& operator=(list&);
 };
 
 template<class T>
