@@ -12,6 +12,9 @@ public:
         item *prev;
         item *next;
         T data;
+
+        item() {};
+        item(item *p, item *n, T d);
     };
 
     list();
@@ -31,6 +34,12 @@ public:
 
     void clear();
     bool empty() const;
+
+    void push_front(T data);
+    void push_back(T data);
+    item* pop_front();
+    item* pop_back();
+
 private:
     item sentinel_;
 
@@ -40,8 +49,16 @@ private:
 };
 
 template<class T>
+list<T>::item::item(item *p, item *n, T d): 
+                prev(p), next(n), data(d) 
+{
+}
+
+template<class T>
 list<T>::list()
 {
+    sentinel_.prev = &sentinel_;
+    sentinel_.next = sentinel_.prev;
 }
 
 template<class T>
@@ -94,7 +111,7 @@ void list<T>::erase(list<T>::item *pos)
 template<class T>
 void list<T>::clear()
 {
-    item *f = sentinel_.next;
+    item *f = begin();
     item *l = end();
 
     while (f != l)
@@ -138,6 +155,36 @@ list<T>::item* list<T>::end() const
 {
     // rev const_cast
     return const_cast<item*>(&sentinel_);
+}
+
+template<class T>
+void list<T>::push_front(T data)
+{
+    insert(begin(), data);
+}
+
+template<class T>
+void list<T>::push_back(T data)
+{
+    insert(end(), data);
+}
+
+template<class T> typename list<T>::item*
+list<T>::pop_front()
+{
+    item* tmp = sentinel_.prev;
+    erase(tmp);
+
+    return tmp;
+}
+
+template<class T> typename list<T>::item*
+list<T>::pop_back()
+{
+    item* tmp = sentinel_.prev;
+    erase(tmp);
+
+    return tmp;
 }
 
 #endif
