@@ -19,31 +19,19 @@ void print(list<T>& l)
 int main()
 {
     list<int> l;
+    list<int> l2;
 
-    // l.insert(l.begin(), 2);
-    // // l.clear();
-    // l.insert(l.begin(), 23);
-    l.push_front(55);
-    l.push_back(99);
-    l.push_front(88);
-    l.push_back(109);
-
-    std::cout << l.pop_back() << std::endl;
-
-    // std::cout << l.begin()->data << std::endl;
-    // std::cout << l.begin()->next->data << std::endl;
+    l.push_front(1); l.push_front(2);
+    l2.push_front(3); l2.push_front(4);
 
     print<int>(l);
+    print<int>(l2);
+    l.splice(l2);
+    print<int>(l);
+    print<int>(l2);
 
-    // std::cout << l.end()->data << std::endl;
-
-    // list<int>::item* i = l.begin();
-
-    // std::cout << i->next << std::endl;
-    // std::cout << "Aqui" << std::endl;
-
-    // std::cout << l.begin() << std::endl;
-
+    l.reverse();
+    print<int>(l);
 
     return 0;
 }

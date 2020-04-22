@@ -2,6 +2,7 @@
 #define _LIST_HEADER
 
 #include <cassert>
+#include <iostream>
 
 template <class T>
 class list
@@ -37,8 +38,13 @@ public:
 
     void push_front(T data);
     void push_back(T data);
+
     item* pop_front();
     item* pop_back();
+
+    void splice(list<T>& l2);
+    void merge(list<T>& l2);
+    void reverse();
 
 private:
     item sentinel_;
@@ -186,5 +192,48 @@ list<T>::pop_back()
 
     return tmp;
 }
+
+// http://www.cplusplus.com/reference/list/list/splice/
+template <class T>
+void list<T>::splice(list<T>& l2)
+{
+    item *i = l2.begin();
+
+    while(i != l2.end())
+    {
+        push_back(i->data);
+        i = l2.next(i); 
+    };
+
+    // Melhor forma (Com manipulação de ponteiros)
+    // Vou escrever sobre as duas formas...
+    // item* tmp = l2.begin();
+    // item* pos = end();
+
+    // Alterando o final da primeira lista
+    // tmp->prev = pos->prev;
+    // pos->prev->next = tmp;
+    // pos->prev = tmp;
+
+    // l2.end()->next = pos;
+    // end()->next = l2.end();
+}
+
+// http://www.cplusplus.com/reference/list/list/reverse/
+template<class T>
+void list<T>::reverse()
+{
+    item* tmp = sentinel_.prev;
+    sentinel_.prev = sentinel_.next;
+    sentinel_.next = tmp;
+}
+
+/**
+ * 
+ *  void splice(list<T> l2);
+    void merge(list<T> l2);
+    void reverse();
+**/
+
 
 #endif
