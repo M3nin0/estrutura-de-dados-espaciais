@@ -26,5 +26,13 @@ int main()
 
     l.merge(l2);
     print<int>(l);
+
+    l.pop_front();
+    l.pop_back();
+    print<int>(l);
+
+    l.push_front(1);
+    print<int>(l);
+
     return 0;
 }

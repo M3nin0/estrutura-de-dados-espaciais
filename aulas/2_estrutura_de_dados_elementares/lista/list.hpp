@@ -176,8 +176,9 @@ void list<T>::push_back(T data)
 template<class T> typename list<T>::item*
 list<T>::pop_front()
 {
-    item* tmp = sentinel_.prev;
-    erase(tmp);
+    item* tmp = sentinel_.next->next;
+    tmp->prev = sentinel_.next->prev;
+    sentinel_.next = tmp;
 
     return tmp;
 }
@@ -185,8 +186,9 @@ list<T>::pop_front()
 template<class T> typename list<T>::item*
 list<T>::pop_back()
 {
-    item* tmp = sentinel_.prev;
-    erase(tmp);
+    item* tmp = sentinel_.prev->prev;
+    tmp->next = sentinel_.prev->next;
+    sentinel_.prev = tmp;
 
     return tmp;
 }
