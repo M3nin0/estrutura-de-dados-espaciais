@@ -38,8 +38,8 @@ public:
     void push_front(T data);
     void push_back(T data);
 
-    item* pop_front();
-    item* pop_back();
+    void pop_front();
+    void pop_back();
 
     void splice(list<T>& l2);
     void merge(list<T>& l2);
@@ -173,24 +173,16 @@ void list<T>::push_back(T data)
     insert(end(), data);
 }
 
-template<class T> typename list<T>::item*
-list<T>::pop_front()
+template<class T>
+void list<T>::pop_front()
 {
-    item* tmp = sentinel_.next->next;
-    tmp->prev = sentinel_.next->prev;
-    sentinel_.next = tmp;
-
-    return tmp;
+    erase(begin());
 }
 
-template<class T> typename list<T>::item*
-list<T>::pop_back()
+template<class T>
+void list<T>::pop_back()
 {
-    item* tmp = sentinel_.prev->prev;
-    tmp->next = sentinel_.prev->next;
-    sentinel_.prev = tmp;
-
-    return tmp;
+    erase(end()->prev);
 }
 
 // https://en.cppreference.com/w/cpp/container/list/splice
