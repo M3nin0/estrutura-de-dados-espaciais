@@ -45,6 +45,8 @@ public:
     void merge(list<T>& l2);
     void reverse();
 
+    item *front() const;
+    item *back() const;
 private:
     item sentinel_;
 
@@ -185,6 +187,18 @@ void list<T>::pop_back()
     erase(end()->prev);
 }
 
+template<class T> typename list<T>::item*
+list<T>::front() const
+{
+    return begin();
+}
+
+template<class T> typename list<T>::item*
+list<T>::back() const
+{
+    return end()->prev;
+}
+ 
 // https://en.cppreference.com/w/cpp/container/list/splice
 template <class T>
 void list<T>::splice(list<T>& l2)

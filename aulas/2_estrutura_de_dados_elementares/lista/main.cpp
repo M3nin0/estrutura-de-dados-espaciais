@@ -34,5 +34,7 @@ int main()
     l.push_front(1);
     print<int>(l);
 
+    std::cout << "Conteúdo inicial e final: " << l.front()->data << " " << l.back()->data << std::endl;
+
     return 0;
 }
