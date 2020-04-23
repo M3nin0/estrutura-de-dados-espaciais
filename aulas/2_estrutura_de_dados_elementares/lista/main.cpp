@@ -22,16 +22,9 @@ int main()
     list<int> l2;
 
     l.push_front(1); l.push_front(2);
-    l2.push_front(3); l2.push_front(4);
+    l2.push_front(3); l2.push_front(4);l2.push_front(99);
 
+    l.merge(l2);
     print<int>(l);
-    print<int>(l2);
-    l.splice(l2);
-    print<int>(l);
-    print<int>(l2);
-
-    l.reverse();
-    print<int>(l);
-
     return 0;
 }

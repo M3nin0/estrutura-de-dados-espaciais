@@ -2,7 +2,6 @@
 #define _LIST_HEADER
 
 #include <cassert>
-#include <iostream>
 
 template <class T>
 class list
@@ -49,7 +48,6 @@ public:
 private:
     item sentinel_;
 
-    // evitando cópias
     list(list&);
     list& operator=(list&);
 };
@@ -64,7 +62,7 @@ template<class T>
 list<T>::list()
 {
     sentinel_.prev = &sentinel_;
-    sentinel_.next = sentinel_.prev;
+    sentinel_.next = &sentinel_;
 }
 
 template<class T>
@@ -193,47 +191,91 @@ list<T>::pop_back()
     return tmp;
 }
 
-// http://www.cplusplus.com/reference/list/list/splice/
+// https://en.cppreference.com/w/cpp/container/list/splice
 template <class T>
 void list<T>::splice(list<T>& l2)
 {
     item *i = l2.begin();
-
     while(i != l2.end())
     {
         push_back(i->data);
         i = l2.next(i); 
     };
-
-    // Melhor forma (Com manipulação de ponteiros)
-    // Vou escrever sobre as duas formas...
-    // item* tmp = l2.begin();
-    // item* pos = end();
-
-    // Alterando o final da primeira lista
-    // tmp->prev = pos->prev;
-    // pos->prev->next = tmp;
-    // pos->prev = tmp;
-
-    // l2.end()->next = pos;
-    // end()->next = l2.end();
+    l2.clear(); // stl based
 }
 
 // http://www.cplusplus.com/reference/list/list/reverse/
 template<class T>
 void list<T>::reverse()
 {
-    item* tmp = sentinel_.prev;
-    sentinel_.prev = sentinel_.next;
-    sentinel_.next = tmp;
+    item *ptr = begin();
+    item *tmp = nullptr;
+
+    while (ptr != end())
+    {
+        tmp = next(ptr);        
+        ptr->next = previous(ptr);
+        ptr->prev = tmp;
+        ptr = ptr->prev;
+    }
+    sentinel_.next = tmp->prev;
 }
 
-/**
- * 
- *  void splice(list<T> l2);
-    void merge(list<T> l2);
-    void reverse();
-**/
+template<class T>
+struct TreeNode
+{
+    T data;
+    TreeNode *left = nullptr;
+    TreeNode *right = nullptr;
 
+    TreeNode() {};
+    TreeNode(T d): data(d) {};
+};
+
+template<class T>
+TreeNode<T>* insert(TreeNode<T>* root, TreeNode<T>* nnode)
+{
+    if(root == nullptr)
+        return nnode;
+
+    if(nnode->data < root->data)
+        root->left = insert(root->left, nnode);
+    else
+        root->right = insert(root->right, nnode);
+    return root;
+}
+
+template<class T>
+void inonderList(TreeNode<T>* root, list<T>& l)
+{
+    if (root->left != nullptr)
+        inonderList(root->left, l);
+    l.push_back(root->data);
+    if(root->right != nullptr)
+        inonderList(root->right, l);
+}
+
+template<class T>
+void sortTree(list<T>& l)
+{
+    TreeNode<T> *root = nullptr;
+    typename list<T>::item *i = l.begin();
+
+    // insert elements
+    while (i != l.end())
+    {
+        root = insert(root, new TreeNode<T>(i->data));
+        i = l.next(i);
+    }
+    l.clear();
+    inonderList(root, l);
+}
+
+template<class T>
+void list<T>::merge(list<T>& l2)
+{
+    splice(l2);
+    sortTree(*this);
+}
 
 #endif
