@@ -189,6 +189,8 @@ void list<T>::pop_back()
 template <class T>
 void list<T>::splice(list<T>& l2)
 {
+    // poderia ser melhorada com manipulação de ponteiros
+    // neste caso, não haveria a remoção dos elementos.
     item *i = l2.begin();
     while(i != l2.end())
     {
@@ -269,7 +271,7 @@ template<class T>
 void list<T>::merge(list<T>& l2)
 {
     splice(l2);
-    sortTree(*this);
+    sortTree(*this); // utilizando árvore para o sort (Apenas para testar)
 }
 
 #endif
