@@ -41,9 +41,13 @@ public:
     KDTree();
 
     void insert(Point p);
+    Point find(Point p);
+
+    // ToDo: Mudar esta estrutura
     KDNode* root = nullptr;
 private:
 
+    Point find_(KDNode* root, KDNode* fnode, std::size_t dim);
     KDNode* insert_(KDNode* root, KDNode* nnode, std::size_t dim);
 };
 
@@ -64,6 +68,30 @@ KDNode* KDTree::insert_(KDNode* root, KDNode* nnode, std::size_t dim)
     else
         root->p_right = insert_(root->p_right, nnode, dim + 1);
     return root;
+}
+
+Point KDTree::find(Point p)
+{
+    return find_(root, new KDNode(p), 0);
+}
+
+Point KDTree::find_(KDNode* root, KDNode* fnode, std::size_t dim)
+{
+    if (root == nullptr)
+        return Point(); // Mudar esta estrutura
+
+    // Caso em que o valor de X e Y são os mesmos (Elemento encontrado!)
+    if (fnode->dim(dim % 2) == root->dim(dim % 2) && 
+            fnode->dim((dim + 1) % 2) == root->dim((dim + 1) % 2))
+        return Point(fnode->dim(0), fnode->dim(1)); // Mudar esta estrutura
+
+    // Verificando através do módulo, variando em X e Y
+    if (root->dim(dim % 2) > fnode->dim(dim % 2))
+        return find_(root->p_left, fnode, dim + 1);
+    else
+        return find_(root->p_right, fnode, dim + 1);
+
+    return Point();
 }
 
 
