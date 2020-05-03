@@ -13,6 +13,10 @@ public:
     void remove(T key);
     void insert(T key);
     BinaryTree* search(T key);
+
+    void preOrder(T (*functor)(T key));
+    void inOrder(T (*functor)(T key));
+    void posOrder(T (*functor)(T key));
 private:
     T p_data;
     BinaryTree *p_root = nullptr;
@@ -21,6 +25,10 @@ private:
     BinaryTree* remove_(BinaryTree* root, T key);
     BinaryTree* search_(BinaryTree* root, T key);
     BinaryTree* insert_(BinaryTree* root, BinaryTree * nbstree);
+
+    void preOrder_(BinaryTree* root, T (*functor)(T key));
+    void inOrder_(BinaryTree* root, T (*functor)(T key));
+    void posOrder_(BinaryTree* root, T (*functor)(T key));
 };
 
 template<class T>
@@ -133,6 +141,59 @@ template<class T>
 void BinaryTree<T>::remove(T key)
 {
     remove_(this, key);
+}
+
+template<class T>
+void BinaryTree<T>::preOrder(T (*functor)(T key))
+{
+    preOrder_(this, functor);
+}
+
+template<class T>
+void BinaryTree<T>::inOrder(T (*functor)(T key))
+{
+    inOrder_(this, functor);
+}
+
+template<class T>
+void BinaryTree<T>::posOrder(T (*functor)(T key))
+{
+    posOrder_(this, functor);
+}
+
+template<class T>
+void BinaryTree<T>::preOrder_(BinaryTree* root, T (*functor)(T key))
+{
+    root->p_data = functor(root->data());
+
+    if (root->p_left != nullptr)
+        preOrder_(root->p_left, functor);
+
+    if (root->p_right != nullptr)
+        preOrder_(root->p_right, functor);
+}
+
+template<class T>
+void BinaryTree<T>::inOrder_(BinaryTree* root, T (*functor)(T key))
+{
+    if (root->p_left != nullptr)
+        inOrder_(root->p_left, functor);
+
+    root->p_data = functor(root->data());
+
+    if (root->p_right != nullptr)
+        inOrder_(root->p_right, functor);
+}
+
+template<class T>
+void BinaryTree<T>::posOrder_(BinaryTree* root, T (*functor)(T key))
+{
+    if (root->p_left != nullptr)
+        posOrder_(root->p_left, functor);
+
+    if (root->p_right != nullptr)
+        posOrder_(root->p_right, functor);
+    root->p_data = functor(root->data());
 }
 
 #endif
