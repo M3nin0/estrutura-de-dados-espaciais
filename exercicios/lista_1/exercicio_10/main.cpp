@@ -1,0 +1,37 @@
+#include "kdtree.hpp"
+
+#include <iostream>
+
+int main()
+{
+    KDTree kd;
+
+    std::cout << "Inserindo ponto (5, 5)" << std::endl;
+    kd.insert(Point(5, 5));
+    std::cout << kd.root << std::endl;
+    std::cout << kd.root->p_left << std::endl;
+    std::cout << kd.root->p_right << std::endl;
+    
+
+    std::cout << "Inserindo ponto (2, 6)" << std::endl;
+    kd.insert(Point(2, 6));
+    std::cout << kd.root << std::endl;
+    std::cout << kd.root->p_left << std::endl;
+    std::cout << kd.root->p_right << std::endl;
+
+    std::cout << "Inserindo ponto (2, 7)" << std::endl;
+    kd.insert(Point(2, 7));
+    std::cout << kd.root->p_left << std::endl;
+    std::cout << kd.root->p_left->p_left << std::endl;
+    std::cout << kd.root->p_left->p_right << std::endl;
+
+    // std::cout << "Inserindo ponto (6, 6)" << std::endl;
+    // kd.insert(Point(6, 6));
+    // std::cout << kd.root << std::endl;
+    // std::cout << kd.root->p_left << std::endl;
+    // std::cout << kd.root->p_right << std::endl;
+
+
+
+    return 0;
+}
