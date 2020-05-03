@@ -1,6 +1,7 @@
 #ifndef _KDTREE_HEADER
 #define _KDTREE_HEADER
 
+#include <vector>
 #include <cstddef>
 #include "geometry.hpp"
 
@@ -12,27 +13,18 @@ struct KDNode
     KDNode* left();
     KDNode* right();
 
-    // i = 0; x
-    // i = 1; y
-    double dim(std::size_t i);
-
     KDNode* p_left, *p_right;
 
+    const Point point();
 private:
     Point p_point;
 };
 
 KDNode::KDNode(Point p): p_point(p) {}
 
-double KDNode::dim(std::size_t i)
+const Point KDNode::point()
 {
-    if (i == 0)
-        return p_point.x();
-    else if (i == 1)
-    {
-        return p_point.y();
-    }
-    return -1;
+    return p_point;
 }
 
 class KDTree
@@ -40,15 +32,15 @@ class KDTree
 public:
     KDTree();
 
+    KDNode* find(Point p);
     void insert(Point p);
-    Point find(Point p);
-
-    // ToDo: Mudar esta estrutura
-    KDNode* root = nullptr;
+    std::vector<KDNode*> search(Rectangle r);
 private:
+    KDNode* root = nullptr;
 
-    Point find_(KDNode* root, KDNode* fnode, std::size_t dim);
+    KDNode* find_(KDNode* root, KDNode* fnode, std::size_t dim);
     KDNode* insert_(KDNode* root, KDNode* nnode, std::size_t dim);
+    std::vector<KDNode*> search_(KDNode* root, Rectangle r, std::size_t dim);
 };
 
 KDTree::KDTree() { }
@@ -63,36 +55,82 @@ KDNode* KDTree::insert_(KDNode* root, KDNode* nnode, std::size_t dim)
     if (root == nullptr)
         return nnode;
 
-    if (root->dim(dim % 2) > nnode->dim(dim % 2))
+    if (root->point().dim(dim % 2) > nnode->point().dim(dim % 2))
         root->p_left = insert_(root->p_left, nnode, dim + 1);
     else
         root->p_right = insert_(root->p_right, nnode, dim + 1);
     return root;
 }
 
-Point KDTree::find(Point p)
+KDNode* KDTree::find(Point p)
 {
     return find_(root, new KDNode(p), 0);
 }
 
-Point KDTree::find_(KDNode* root, KDNode* fnode, std::size_t dim)
+KDNode* KDTree::find_(KDNode* root, KDNode* fnode, std::size_t dim)
 {
+    std::size_t actualDim = dim % 2;
+    std::size_t nextDim = (dim + 1) % 2;
+
     if (root == nullptr)
-        return Point(); // Mudar esta estrutura
+        return nullptr;
 
-    // Caso em que o valor de X e Y são os mesmos (Elemento encontrado!)
-    if (fnode->dim(dim % 2) == root->dim(dim % 2) && 
-            fnode->dim((dim + 1) % 2) == root->dim((dim + 1) % 2))
-        return Point(fnode->dim(0), fnode->dim(1)); // Mudar esta estrutura
+    // Identifica se o nó atual possuí o elemento procurado
+    if (fnode->point().dim(actualDim) == root->point().dim(actualDim) && 
+            fnode->point().dim(nextDim) == root->point().dim(nextDim))
+        return root;
 
-    // Verificando através do módulo, variando em X e Y
-    if (root->dim(dim % 2) > fnode->dim(dim % 2))
+    if (root->point().dim(actualDim) > fnode->point().dim(actualDim))
         return find_(root->p_left, fnode, dim + 1);
     else
         return find_(root->p_right, fnode, dim + 1);
-
-    return Point();
+    return nullptr;
 }
 
+std::vector<KDNode*> KDTree::search(Rectangle r)
+{
+    return search_(root, r, 0);
+}
+
+std::vector<KDNode*> KDTree::search_(KDNode* root, Rectangle r, std::size_t dim)
+{
+    std::vector<KDNode*> reported;
+    std::vector<KDNode*> operational;
+
+    std::size_t actualDim = dim % 2;
+    std::size_t nextDim = (dim + 1) % 2;    
+    Range actualDimRange = r.dim(actualDim);
+    Range nextDimRange = r.dim(nextDim);    
+
+    if (root == nullptr)
+        return std::vector<KDNode*>();
+
+    if (root->point().dim(actualDim) > actualDimRange.max())
+        operational = search_(root->p_left, r, dim + 1);
+    else
+        operational = search_(root->p_right, r, dim + 1);
+
+    if (root->point().dim(actualDim) >= actualDimRange.min() && 
+        root->point().dim(actualDim) <= actualDimRange.max()) 
+    {
+        if (root->point().dim(nextDim) >= nextDimRange.min() && 
+            root->point().dim(nextDim) <= nextDimRange.max())
+            reported.push_back(root);
+        
+        std::vector<KDNode*> nodesInRange;
+
+        nodesInRange = search_(root->p_left, r, dim + 1);
+        reported.insert(reported.end(), nodesInRange.begin(), nodesInRange.end());
+        nodesInRange.erase(nodesInRange.begin(), nodesInRange.end());
+
+        nodesInRange = search_(root->p_right, r, dim + 1);
+        reported.insert(reported.end(), nodesInRange.begin(), nodesInRange.end());
+
+        return reported;
+    }
+
+    reported.insert(reported.end(), operational.begin(), operational.end());
+    return reported;
+}
 
 #endif
