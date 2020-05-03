@@ -59,10 +59,10 @@ KDNode* KDTree::insert_(KDNode* root, KDNode* nnode, std::size_t dim)
     if (root == nullptr)
         return nnode;
 
-    if (root->dim(dim) > nnode->dim(dim))
-        root->p_left = insert_(root->p_left, nnode, dim % 2);
+    if (root->dim(dim % 2) > nnode->dim(dim % 2))
+        root->p_left = insert_(root->p_left, nnode, dim + 1);
     else
-        root->p_right = insert_(root->p_right, nnode, dim % 2);
+        root->p_right = insert_(root->p_right, nnode, dim + 1);
     return root;
 }
 
