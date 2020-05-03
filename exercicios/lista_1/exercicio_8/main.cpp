@@ -17,8 +17,14 @@ int main()
     bt.insert(7);
     bt.insert(6);
     bt.insert(9);
+    bt.insert(11);
+    bt.insert(15);
+    bt.insert(17);
+    
 
-    bt.posOrder(Print);
+    // bt.posOrder(Print);
+
+    std::cout << bt.height() << std::endl;
 
     return 0;
 }

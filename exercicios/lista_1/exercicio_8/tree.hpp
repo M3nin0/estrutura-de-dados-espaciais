@@ -17,6 +17,8 @@ public:
     void preOrder(T (*functor)(T key));
     void inOrder(T (*functor)(T key));
     void posOrder(T (*functor)(T key));
+
+    int height();
 private:
     T p_data;
     BinaryTree *p_root = nullptr;
@@ -29,6 +31,8 @@ private:
     void preOrder_(BinaryTree* root, T (*functor)(T key));
     void inOrder_(BinaryTree* root, T (*functor)(T key));
     void posOrder_(BinaryTree* root, T (*functor)(T key));
+
+    int height_(BinaryTree* root);
 };
 
 template<class T>
@@ -194,6 +198,37 @@ void BinaryTree<T>::posOrder_(BinaryTree* root, T (*functor)(T key))
     if (root->p_right != nullptr)
         posOrder_(root->p_right, functor);
     root->p_data = functor(root->data());
+}
+
+template<class T>
+int BinaryTree<T>::height()
+{
+    return height_(this);
+}
+
+template<class T>
+int BinaryTree<T>::height_(BinaryTree* root)
+{
+    int total = 0;
+    int heightLeft = 0;
+    int heightRight = 0;
+
+    // Percorre cada um das sub-árvores esquerda e direita
+    // neste processo, recursivamente os valores de altura vão sendo gerados
+    if (root->p_left != nullptr)
+        heightLeft = height_(root->p_left);
+    if (root->p_right != nullptr)
+        heightRight = height_(root->p_right);
+
+    // ao final da varredura, que é inspirada no processo posOrder
+    // é definido qual dos lados é o maior, e então a altura deste é utilizado
+    // como retorno.
+    total = heightRight;
+    if (heightLeft > heightRight)
+        total = heightLeft;
+
+    // A soma do elemento 1 é feita para representar a raiz
+    return total + 1;
 }
 
 #endif
