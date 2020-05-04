@@ -53,6 +53,9 @@ BinaryTree<T>* BinaryTree<T>::insert_(BinaryTree *root, BinaryTree * nbstree)
     if (root == nullptr)
         return nbstree;
 
+    // if (root->data() == nbstree->data())
+    //     return nbstree;
+
     if (root->data() > nbstree->data())
         root->p_left = insert_(root->p_left, nbstree);
     else

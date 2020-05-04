@@ -2,6 +2,7 @@
 #define _MTREE_HEADER
 
 // Vector selecionado por conta do O(1) na seleção
+// Fonte: http://ads.dpi.inpe.br/lib/exe/fetch.php?media=wiki:turma2020:aula-03-prog-gen.pdf
 #include <vector>
 #include <cstddef>
 #include <stdexcept>
@@ -45,6 +46,7 @@ void MTree<T>::push_back(T data)
 template<class T>
 void MTree<T>::insert(std::size_t tid, T data)
 {
+    // Insere dados em um filho específico
     if (tid >= countChildren())
         throw std::runtime_error("Índice inválido!");
 
@@ -74,6 +76,8 @@ MTree<T>* MTree<T>::getChildren(std::size_t tid) const
 template<class T>
 std::size_t countDescendantRecursive(const MTree<T>* root)
 {
+    // Utilizado para a definição dos descendentes: 
+    // http://wiki.icmc.usp.br/images/2/22/Aula13Arvores.pdf
     std::size_t res = 0;
     std::size_t childrenSize = root->countChildren();
     if (childrenSize == 0)
