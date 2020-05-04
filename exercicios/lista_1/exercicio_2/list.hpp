@@ -73,6 +73,9 @@ list<T>::~list()
     clear();
 }
 
+// typename = indica para o compilador que o elemento
+// é uma declaração de tipo
+// https://stackoverflow.com/questions/1600936/officially-what-is-typename-for
 template<class T> typename list<T>::item* 
 list<T>::find(T data) const
 {
@@ -204,7 +207,7 @@ template <class T>
 void list<T>::splice(list<T>& l2)
 {
     // poderia ser melhorada com manipulação de ponteiros
-    // neste caso, não haveria a remoção dos elementos.
+    // mas, não haveria a remoção dos elementos.
     item *i = l2.begin();
     while(i != l2.end())
     {
@@ -285,7 +288,10 @@ template<class T>
 void list<T>::merge(list<T>& l2)
 {
     splice(l2);
-    sortTree(*this); // utilizando árvore para o sort (Apenas para testar)
+    // Para a realização do sort, foi feita a utilização de uma árvore binária, onde a simples
+    // inserção dos elementos na estrutura faz com que a mesma seja ordenada, após este processo 
+    // a árvore é caminhada em InOrdem o que garante a devolução dos elementos ordenados
+    sortTree(*this);
 }
 
 #endif

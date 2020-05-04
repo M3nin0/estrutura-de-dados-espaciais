@@ -18,14 +18,14 @@ int precedenceFactor(char c)
 {
     switch (c)
     {
+        case '(':
+            return 1;
         case '+':
         case '-':
             return 2;
         case '*':
         case '/':
             return 3;
-        case '(':
-            return 1;
     }
     return -1;
 }

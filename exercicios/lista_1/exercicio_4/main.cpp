@@ -22,10 +22,9 @@ int main()
     d.addBegin(5);
     d.addEnd(7);
 
-    d.addAt(2, 99);
+    // d.addAt(2, 99);
 
     printDeck(d);
-
 
     return 0;
 }

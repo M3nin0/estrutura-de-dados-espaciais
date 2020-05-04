@@ -15,6 +15,11 @@ void print(list<T>& l)
     std::cout << std::endl;
 }
 
+struct complex
+{
+    int a;
+    int b;
+};
 
 int main()
 {
@@ -35,6 +40,12 @@ int main()
     print<int>(l);
 
     std::cout << "Conteúdo inicial e final: " << l.front()->data << " " << l.back()->data << std::endl;
+
+    std::cout << l.find(1)->data << std::endl;
+
+    list<complex> l3;
+    l3.insert(l3.begin(), complex());
+    // l3.find(complex()); // erro
 
     return 0;
 }
