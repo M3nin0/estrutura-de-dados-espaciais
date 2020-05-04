@@ -34,13 +34,13 @@ public:
 
     KDNode* find(Point p);
     void insert(Point p);
-    std::vector<KDNode*> search(Rectangle r);
+    std::vector<KDNode*>* search(Rectangle r);
 private:
     KDNode* root = nullptr;
 
     KDNode* find_(KDNode* root, KDNode* fnode, std::size_t dim);
     KDNode* insert_(KDNode* root, KDNode* nnode, std::size_t dim);
-    std::vector<KDNode*> search_(KDNode* root, Rectangle r, std::size_t dim);
+    void search_(KDNode* root, Rectangle r, std::vector<KDNode*>*, std::size_t dim);
 };
 
 KDTree::KDTree() { }
@@ -80,6 +80,8 @@ KDNode* KDTree::find_(KDNode* root, KDNode* fnode, std::size_t dim)
             fnode->point().dim(nextDim) == root->point().dim(nextDim))
         return root;
 
+    // Caso o nó corrente não seja o selecionado, então a busca inicia novamente
+    // considerando uma nova dimensão
     if (root->point().dim(actualDim) > fnode->point().dim(actualDim))
         return find_(root->p_left, fnode, dim + 1);
     else
@@ -87,50 +89,45 @@ KDNode* KDTree::find_(KDNode* root, KDNode* fnode, std::size_t dim)
     return nullptr;
 }
 
-std::vector<KDNode*> KDTree::search(Rectangle r)
+std::vector<KDNode*>* KDTree::search(Rectangle r)
 {
-    return search_(root, r, 0);
+    std::vector<KDNode*>* reported = new std::vector<KDNode*>();
+    search_(root, r, reported, 0);
+
+    return reported;
 }
 
-std::vector<KDNode*> KDTree::search_(KDNode* root, Rectangle r, std::size_t dim)
+void KDTree::search_(KDNode* root, Rectangle r, 
+                        std::vector<KDNode*>* reported, std::size_t dim)
 {
-    std::vector<KDNode*> reported;
-    std::vector<KDNode*> operational;
-
     std::size_t actualDim = dim % 2;
-    std::size_t nextDim = (dim + 1) % 2;    
+    std::size_t nextDim = (dim + 1) % 2;
     Range actualDimRange = r.dim(actualDim);
-    Range nextDimRange = r.dim(nextDim);    
+    Range nextDimRange = r.dim(nextDim); 
 
     if (root == nullptr)
-        return std::vector<KDNode*>();
+        return; // Para evitar falha de segmentação
 
-    if (root->point().dim(actualDim) > actualDimRange.max())
-        operational = search_(root->p_left, r, dim + 1);
-    else
-        operational = search_(root->p_right, r, dim + 1);
-
+    // Verifica se o elemento está dentro do intervalo delimitado
+    // Caso uma dimensão seja igual, a outra dimensão é verificada, se a segunda
+    // dimensão for igual, então o elemento é reportado
     if (root->point().dim(actualDim) >= actualDimRange.min() && 
         root->point().dim(actualDim) <= actualDimRange.max()) 
     {
         if (root->point().dim(nextDim) >= nextDimRange.min() && 
             root->point().dim(nextDim) <= nextDimRange.max())
-            reported.push_back(root);
-        
-        std::vector<KDNode*> nodesInRange;
-
-        nodesInRange = search_(root->p_left, r, dim + 1);
-        reported.insert(reported.end(), nodesInRange.begin(), nodesInRange.end());
-        nodesInRange.erase(nodesInRange.begin(), nodesInRange.end());
-
-        nodesInRange = search_(root->p_right, r, dim + 1);
-        reported.insert(reported.end(), nodesInRange.begin(), nodesInRange.end());
-
-        return reported;
+                reported->push_back(root);
+                // O fato de não fazer retorno nesta parte, indicando por exemplo o fim de uma recursão
+                // indica que mesmo encontrando um elemento, os lados precisam do nó precisam ser verificados.
     }
 
-    reported.insert(reported.end(), operational.begin(), operational.end());
-    return reported;
+    // Nesta parte, o que está sendo feito é eliminar os lados da árvore
+    // que não tem os 'requisitos' do range, ou melhor, que não estão dentro
+    // do intervalo selecionado
+    if (actualDimRange.min() <= root->point().dim(actualDim))
+        search_(root->p_left, r, reported, dim + 1);
+    if (actualDimRange.max() >= root->point().dim(actualDim))
+        search_(root->p_right, r, reported, dim + 1);
 }
 
 #endif
