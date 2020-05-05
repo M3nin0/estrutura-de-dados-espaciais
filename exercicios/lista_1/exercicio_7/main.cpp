@@ -5,7 +5,7 @@ int Print(int t)
 {
     std::cout << t << std::endl;
 
-    return t;
+    return t * 2;
 }
 
 int main()
@@ -18,6 +18,8 @@ int main()
     bt.insert(6);
     bt.insert(9);
 
+    bt.posOrder(Print);
+    std::cout << "==== Versão após aplicação do functor" << std::endl;
     bt.posOrder(Print);
 
     return 0;
