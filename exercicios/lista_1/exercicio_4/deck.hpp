@@ -19,21 +19,27 @@ public:
     void addBegin(T data);
     void addAt(std::size_t pos, T data);
 
-    T back() const;
-    T front() const;
+    void removeEnd();
+    void removeBegin();
+
+    std::size_t end() const;
+    std::size_t begin() const;
+
+    std::size_t size() const;
 
     T at(std::size_t idx);
-
     T& operator[](std::size_t idx);
 private:
     T* index;
-    std::size_t p_max_decksize = 10;
+
+    int size_ = 0;
+    int p_max_decksize = 10;
     // Nesta parte, durante a segunda implementação, foi percebido que
     // a manipulação dos elementos no modo inverso é mais fácil, principalmente
     // para as operações de inserção e deleção.
     // O mesmo pode ser feito considerando a ordem normal dos vetores, porém, ao que
     // se percebeu, era necessário a adição de mais lógica para tal.
-    std::size_t p_head = 10, p_tail = 0;
+    int p_head = 10, p_tail = 0;
 
     std::size_t pos(std::size_t p);
 };
@@ -41,13 +47,13 @@ private:
 template<class T>
 deck<T>::deck()
 {
-    index = new T(p_max_decksize);
+    index = new T[p_max_decksize];
 }
 
 template<class T>
 deck<T>::deck(std::size_t maxsize)
 {
-    index = new T(maxsize);
+    index = new T[maxsize];
     p_max_decksize = maxsize;
 
     // ajustando os índices
@@ -63,12 +69,20 @@ deck<T>::~deck()
 template<class T>
 void deck<T>::addBegin(T data)
 {
+    if((p_head-2) == p_tail || size_ == p_max_decksize)
+        throw std::out_of_range("Limite do deque atingido");
+
+    size_++;
     index[(--p_head) % p_max_decksize] = data;
 }
 
 template<class T>
 void deck<T>::addEnd(T data)
 {
+    if ((p_tail+2) == p_head || size_ == p_max_decksize)
+        throw std::out_of_range("Limite do deque atingido");
+
+    size_++;
     index[(p_tail++) % p_max_decksize] = data;
 }
 
@@ -116,6 +130,44 @@ template<class T>
 std::size_t deck<T>::pos(std::size_t idx)
 {
     return (idx + p_head) % p_max_decksize;
+}
+
+template<class T>
+std::size_t deck<T>::end() const
+{
+    return (p_tail) % p_max_decksize;
+}
+
+template<class T>
+std::size_t deck<T>::begin() const
+{
+    return (p_head - 1) % p_max_decksize;
+}
+
+template<class T>
+std::size_t deck<T>::size() const
+{
+    return size_;
+}
+
+template<class T>
+void deck<T>::removeEnd()
+{
+    if (size_ == 0)
+        throw std::out_of_range("O deque está vazio!");
+
+    size_--;
+    p_tail--;
+}
+
+template<class T>
+void deck<T>::removeBegin()
+{
+    if (size_ == 0)
+        throw std::out_of_range("O deque está vazio");
+
+    size_--;
+    p_head++;
 }
 
 /**

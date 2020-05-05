@@ -2,29 +2,20 @@
 
 #include <iostream>
 
-template<class T>
-void printDeck(deck<T>& d)
-{
-    typename deck<T>::deckitem *init = d.begin();
-
-    while (init != nullptr)
-    {
-        std::cout << init->data << " ";
-        init = init->next;
-    }
-    std::cout << std::endl;
-}
-
 int main()
 {
-    deck<int> d;
+    deck<int> d(20);
+
     d.addBegin(2);
-    d.addBegin(5);
-    d.addEnd(7);
+    d.addBegin(3);
+    d.addBegin(4);
+    d.addEnd(23);
+    d.addEnd(27);
+    d.addEnd(29);
+    d.addAt(d.end(), 31);
 
-    // d.addAt(2, 99);
-
-    printDeck(d);
+    std::cout << d[0] << std::endl;
+    std::cout << d[4] << std::endl;
 
     return 0;
 }
