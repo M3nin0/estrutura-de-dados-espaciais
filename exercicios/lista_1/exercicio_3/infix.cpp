@@ -1,7 +1,10 @@
+#include "infix.hpp"
+
 #include <stack>
 #include <string>
 #include <cstddef>
-#include "infix.hpp"
+#include <math.h>
+#include <limits>
 
 
 bool isOperation(char& c)
@@ -107,4 +110,48 @@ std::string infixToPostfix(const std::string& infixexp)
     }
     
     return result;
+}
+
+double evaluate(double a, double b, char op)
+{
+    switch (op)
+    {
+    case '^':
+        return std::pow(a, b);
+    case '+':
+        return a + b;
+    case '-':
+        return a - b;
+    case '*':
+        return a * b;
+    case '/':
+        return a / b;
+    }
+    // Caso não encontre a ideia é retornar um valor
+    // que fique evidente o erro
+    return std::numeric_limits<double>::max();
+}
+
+double evaluatePostfix(const std::string& postfixexp)
+{
+    std::stack<double> opStack;
+
+    for(auto c: postfixexp)
+    {
+        if (std::isdigit(c))
+            opStack.push(std::atof(&c));
+        if (isOperation(c))
+        {
+            // Caso não seja digito é assumido que é necessário fazer uma operação
+            // A ideia aqui é apenas consumir a estrutura da notação posfixa.
+            double a = opStack.top();
+            opStack.pop();
+            double b = opStack.top();
+            opStack.pop();
+
+            opStack.push(evaluate(a, b, c));
+        }
+    }
+
+    return opStack.top();
 }
