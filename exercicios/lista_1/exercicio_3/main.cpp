@@ -4,8 +4,13 @@
 int main()
 {
 
-    std::cout << infixToPostfix("A*B") << std::endl;
-    std::cout << infixToPostfix("A*B+C") << std::endl;
+    // std::cout << infixToPostfix("1") << std::endl;
+    // std::cout << infixToPostfix("1+2") << std::endl;
+    // std::cout << infixToPostfix("(1+2)") << std::endl;
+    // std::cout << infixToPostfix("( 1 + 2 )") << std::endl;
+
+    std::cout << infixToPostfix("(1 + 2) * (1 + 2)") << std::endl;
+    std::cout << infixToPostfix("5 * (((9 + 8) * (4 * 6)) + 7)") << std::endl;
 
     return 0;
 }
