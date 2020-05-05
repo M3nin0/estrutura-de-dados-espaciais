@@ -1,18 +1,10 @@
 #include <iostream>
 #include "tree.hpp"
 
-int Print(int t)
-{
-    std::cout << t << std::endl;
-
-    return t;
-}
-
 int main()
 {
     BinaryTree<int> bt(5);
     
-    // bt.insert
     bt.insert(3);
     bt.insert(7);
     bt.insert(6);
@@ -21,9 +13,7 @@ int main()
     bt.insert(15);
     bt.insert(17);
     
-
-    // bt.posOrder(Print);
-
+    // Valor esperado: 6
     std::cout << bt.height() << std::endl;
 
     return 0;

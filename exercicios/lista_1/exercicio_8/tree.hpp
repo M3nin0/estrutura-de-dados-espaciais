@@ -7,6 +7,7 @@ class BinaryTree
 public:
     BinaryTree();
     BinaryTree(T key);
+    ~BinaryTree();
 
     T data();
 
@@ -32,6 +33,8 @@ private:
     void inOrder_(BinaryTree* root, T (*functor)(T key));
     void posOrder_(BinaryTree* root, T (*functor)(T key));
 
+    void delete_(BinaryTree* root);
+
     int height_(BinaryTree* root);
 };
 
@@ -40,6 +43,24 @@ BinaryTree<T>::BinaryTree() {}
 
 template<class T>
 BinaryTree<T>::BinaryTree(T key): p_data(key) {}
+
+
+template<class T>
+void BinaryTree<T>::delete_(BinaryTree* root)
+{
+    if (root->p_left != nullptr)
+       delete(root->p_left);
+
+    if (root->p_right != nullptr)
+        delete(root->p_right);
+    delete root->p_root;
+}
+
+template<class T>
+BinaryTree<T>::~BinaryTree()
+{
+    delete_(this);
+}
 
 template<class T>
 T BinaryTree<T>::data()
@@ -52,9 +73,6 @@ BinaryTree<T>* BinaryTree<T>::insert_(BinaryTree *root, BinaryTree * nbstree)
 {
     if (root == nullptr)
         return nbstree;
-
-    // if (root->data() == nbstree->data())
-    //     return nbstree;
 
     if (root->data() > nbstree->data())
         root->p_left = insert_(root->p_left, nbstree);
@@ -82,53 +100,59 @@ BinaryTree<T>* BinaryTree<T>::remove_(BinaryTree* root, T key)
 {
     BinaryTree *res = nullptr;
 
-    if (root != nullptr)
+    if (root == nullptr)
+        return res;
+
+    if (root->data() > key)
     {
-        if (root->data() > key)
+        root->p_left = remove_(root->p_left, key);
+        res = root;
+    } else if (root->data() < key)
+    {
+        root->p_right = remove_(root->p_right, key);
+        res = root;
+    } else
+    {
+        // Tratamento dos três casos base
+        // 1° Caso (O elemento a ser removido é um nó folha)
+        if (root->p_left == nullptr && root->p_right == nullptr)
         {
-            root->p_left = remove_(root->p_left, key);
-        } else if (root->data() < key)
+            res = root->p_right;
+        }
+        // 2° Caso (Nó intermediário com apenas um filho)
+        // 2.1 (Lado esquerdo possui filho)
+        else if (root->p_left != nullptr && root->p_right == nullptr)
         {
-            root->p_right = remove_(root->p_right, key);
-        } else
+            res = root->p_left;
+        }
+        // 2.2 (Lado direito possui filho)
+        else if (root->p_right != nullptr && root->p_left == nullptr)
         {
-            // Tratamento dos três casos base
-            // 1° Caso (O elemento a ser removido é um nó folha)
-            if (root->p_left == nullptr && root->p_right == nullptr)
+            res = root->p_right;
+        }
+        // 3° Caso (Nó intermediário com dois filhos)
+        // Duas estratégias podem ser utilizadas
+        //  - 1° Substituir este nó pelo maior nó da sub-árvore da esquerda
+        //  - 2° Substituir este nó pelo menor nó da sub-árvore da direita
+        else 
+        {
+            // Utilizando o 1° caso (maior elemento da sub-árvore da esquerda)
+            res = root->p_left;
+            
+            while (res->p_right != nullptr)
             {
-                delete root; // testar deleção de ponteiro
-            }
-            // 2° Caso (Nó intermediário com apenas um filho)
-            // 2.1 (Lado esquerdo possui filho)
-            else if (root->p_left != nullptr && root->p_right == nullptr)
-            {
-                res = root->p_left;
-                delete root;
-            }
-            // 2.2 (Lado direito possui filho)
-            else if (root->p_right != nullptr && root->p_left == nullptr)
-            {
-                res = root->p_right;
-                delete root;
-            }
-            // 3° Caso (Nó intermediário com dois filhos)
-            // Duas estratégias podem ser utilizadas
-            //  - 1° Substituir este nó pelo maior nó da sub-árvore da esquerda
-            //  - 2° Substituir este nó pelo menor nó da sub-árvore da direita
-            else 
-            {
-                // Utilizando o 1° caso (maior elemento da sub-árvore da esquerda)
-                res = root->p_left;
-                while (res->p_right != nullptr)
-                {
-                    res = res->p_right;
-                }
-                root->p_data = res->data();
-                remove_(res, res->data());
-                res = root;
-            }
+                res = res->p_right;
+            }   
+            // salvando os dados antes de remover o nó
+            T data = res->data();
+
+            root = remove_(root, data);
+            root->p_data = data;
+
+            res = root;
         }
     }
+
     return res;
 }
 
@@ -147,7 +171,12 @@ BinaryTree<T>* BinaryTree<T>::search(T key)
 template<class T>
 void BinaryTree<T>::remove(T key)
 {
-    remove_(this, key);
+    BinaryTree<T>* bt = remove_(this, key);
+
+    p_data = bt->p_data;
+    p_root = bt->p_root;
+    p_left = bt->p_left;
+    p_right = bt->p_right;
 }
 
 template<class T>
