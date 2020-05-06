@@ -7,7 +7,7 @@ int main()
     KDTree kd;
 
     // Inserindo elementos para teste
-    // A quantidade foi aumentando com os testes, durante o desenvolvimento aconteceu
+    // A quantidade de pontos foi aumentando com os testes, durante o desenvolvimento aconteceu
     // muito o 'viés' das entradas por conta da natureza da estrutura, onde, 
     // mesmo o código não considerando nenhuma característica
     // dos dados, o resultado saia certo, e então, ao fazer um insert extra o resultado ficava todo errado.
@@ -32,7 +32,7 @@ int main()
     kd.insert(Point(6, 2));
     kd.insert(Point(5, 2));
 
-    std::vector<KDNode*>* res =kd.search(Rectangle(2, 5, 0, 4));
+    std::vector<KDNode*>* res = kd.search(Rectangle(2, 5, 0, 4));
     std::cout << "Resultado da pesquisa" << std::endl;
     std::cout << res->size() << std::endl;
     
@@ -40,6 +40,9 @@ int main()
     {
         std::cout << p->point().x() << " " << p->point().y() << std::endl;
     }
+
+    // liberando recursos
+    kd.clear();
 
     return 0;
 }

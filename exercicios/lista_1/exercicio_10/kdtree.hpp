@@ -10,12 +10,8 @@ struct KDNode
 {
     KDNode(Point p);
 
-    KDNode* left();
-    KDNode* right();
-
-    KDNode* p_left, *p_right;
-
     const Point point();
+    KDNode* p_left, *p_right;
 private:
     Point p_point;
 };
@@ -31,19 +27,46 @@ class KDTree
 {
 public:
     KDTree();
+    ~KDTree();
 
     KDNode* find(Point p);
     void insert(Point p);
     std::vector<KDNode*>* search(Rectangle r);
+    void clear();
 private:
     KDNode* root = nullptr;
 
     KDNode* find_(KDNode* root, KDNode* fnode, std::size_t dim);
     KDNode* insert_(KDNode* root, KDNode* nnode, std::size_t dim);
     void search_(KDNode* root, Rectangle r, std::vector<KDNode*>*, std::size_t dim);
+
+    void clear_(KDNode* root);
 };
 
 KDTree::KDTree() { }
+
+void KDTree::clear_(KDNode* root)
+{
+    // evita erros após 'exclusões consecutivas'
+    if (root != nullptr)
+        return;
+
+    if (root->p_left != nullptr)
+        clear_(root->p_left);
+    if (root->p_right != nullptr)
+        clear_(root->p_right);
+    delete root;
+}
+
+KDTree::~KDTree()
+{
+    clear();
+}
+
+void KDTree::clear()
+{
+    clear_(root);
+}
 
 void KDTree::insert(Point p)
 {
