@@ -32,15 +32,16 @@ int main()
 
     try
     {
-        outFile.open("alturas.csv", std::ios::app);
-        outFile << "n, altura, teste\n";
+        outFile.open("alturas.csv", std::ios::trunc);
+        outFile << "n, altura, log2n, teste\n";
 
         for(std::size_t t = 1; t <= 10; ++t)
         {
             for(std::size_t i = 1; i <= 6; ++i)
             {
                 bt = applyRandomValuesInTree(i);
-                outFile << i << "," << bt->height() << "," << t << std::endl;
+                double log2h = std::log2(std::pow(10, i));
+                outFile << i << "," << bt->height() << "," << log2h << "," << t << std::endl;
             }
         }
     }
@@ -48,7 +49,7 @@ int main()
     {
         std::cerr << e.what() << '\n';
     }
-    
+
     outFile.close();
     return 0;
 }
