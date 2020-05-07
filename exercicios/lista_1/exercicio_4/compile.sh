@@ -2,4 +2,4 @@
 
 cmake .
 make
-./deck
+./exe4

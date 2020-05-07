@@ -1,3 +1,0 @@
-# Deque (double-ended queue)
-
-
