@@ -13,7 +13,7 @@ int main()
     mt.insert(1, 44);
 
     MTree<int>* mt2 = mt.getChildren(0);
-    mt2->push_back(23);
+    mt2->push_back(77);
     MTree<int>* mt3 = mt2->getChildren(0);
     mt3->push_back(55);
 
@@ -22,11 +22,13 @@ int main()
     mt4->getChildren(0)->push_back(9);
     mt4->getChildren(0)->push_back(8);
 
+    std::cout << "Recuperação" << std::endl;
     std::cout << mt2->countChildren() << std::endl;
     std::cout << mt2->getChildren(0)->data() << std::endl;
-    // std::cout << mt2->getChildren(1)->data() << std::endl; // Para testar o exception
+    std::cout << mt2->getChildren(1)->data() << std::endl;
     // std::cout << mt2->getChildren(2)->data() << std::endl; // Para testar o exception
 
+    std::cout << "counts" << std::endl;
     std::cout << mt3->countDescendant() << std::endl;
     std::cout << mt3->countChildren() << std::endl;
     std::cout << mt.countChildren() << std::endl;    
