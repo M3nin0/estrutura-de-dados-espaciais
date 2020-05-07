@@ -8,26 +8,35 @@
 #include <algorithm>
 
 
-BinaryTree<int>* applyRandomValuesInTree(std::size_t n)
+BinaryTree<double>* applyRandomValuesInTree(std::size_t n)
 {
-    BinaryTree<int>* bt = new BinaryTree<int>();
+    BinaryTree<double>* bt = new BinaryTree<double>();
 
     std::random_device randomDevice; // Utilizado para gerar a seed
     std::mt19937 engine(randomDevice()); // Engine de geração de números aleatórios com o algoritmo Mersenne Twister
-    std::uniform_int_distribution<> dist(1, std::pow(10, n));
+    std::uniform_real_distribution<> dist(1.0, std::pow(10, n));
 
-    for(std::size_t i = 0; i < std::pow(10, n); ++i)
+    std::size_t sentinel = 0;
+
+    while (sentinel < std::pow(10, n))
     {
-        bt->insert(dist(engine));
-    }
+        double tmp = dist(engine) / 1500;
 
+        // Estrutura criada para garantir que elementos repetidos
+        // não sejam contabilizados. Apenas para dar confiabilidade ao teste
+        if (bt->search(tmp) == nullptr) 
+        {
+            bt->insert(tmp);
+            sentinel++;
+        } 
+    } 
     return bt;
 }
 
 
 int main()
 {
-    BinaryTree<int>* bt;    
+    BinaryTree<double>* bt;    
     std::ofstream outFile; //output file stream
 
     try
@@ -35,6 +44,7 @@ int main()
         outFile.open("alturas.csv", std::ios::trunc);
         outFile << "n, altura, log2n, teste\n";
 
+        // Faz uma bateria de testes
         for(std::size_t t = 1; t <= 10; ++t)
         {
             for(std::size_t i = 1; i <= 6; ++i)
