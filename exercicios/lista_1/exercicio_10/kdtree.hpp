@@ -5,7 +5,6 @@
 #include <cstddef>
 #include "geometry.hpp"
 
-
 struct KDNode
 {
     KDNode(Point p);
