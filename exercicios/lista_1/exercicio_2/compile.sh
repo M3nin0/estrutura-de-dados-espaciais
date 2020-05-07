@@ -2,4 +2,4 @@
 
 cmake .
 make
-./list
+./exe2
