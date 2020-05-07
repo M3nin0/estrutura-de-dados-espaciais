@@ -207,14 +207,13 @@ template <class T>
 void list<T>::splice(list<T>& l2)
 {
     // poderia ser melhorada com manipulação de ponteiros
-    // mas, não haveria a remoção dos elementos.
     item *i = l2.begin();
     while(i != l2.end())
     {
         push_back(i->data);
         i = l2.next(i); 
     };
-    l2.clear(); // stl based
+    // l2.clear(); // stl based
 }
 
 // http://www.cplusplus.com/reference/list/list/reverse/
