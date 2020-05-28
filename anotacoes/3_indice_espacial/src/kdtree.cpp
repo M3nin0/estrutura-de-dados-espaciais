@@ -133,7 +133,19 @@ void KDTree::search_(const Node* root,
     if(isXDimension)
     {
         // Verifica se as dimensões de X estão dentro do intervalo
-        // if ()
+        if (r.ll_.x_ <= root_->c_.x_) // Verifica se a raiz está do lado direito de xmin
+            search_(root_->left_, coords, r, !isXDimension);
+        if (r.ur_.x_ >= root_->c_.x_) // Verifica se a raiz está do lado esquerdo de xmax
+            search_(root_->righ_, coords, r, !isXDimension);
+    }
+    else
+    {
+        // Verifica se as dimensões de Y estão dentro do intervalo
+        if (r.ll_.y_ <= root_->c_.y_) // Verifica se a raiz está acima de ymin
+            search_(root_->left_, coords, r, !isXDimension);
+        if (r.ur_.y_ >= root_->c_.y_) // Verifica se a raiz está abaixo de ymax
+            search_(root_->righ_, coords, r, !isXDimension);
     }
 
+    return;
 }
