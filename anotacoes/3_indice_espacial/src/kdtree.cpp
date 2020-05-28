@@ -97,14 +97,14 @@ bool KDTree::contains_(Node* root, const Coordinate& c, bool isXDimension) const
     if (isXDimension)
     {
         if (c.x_ > root->c_.x_)
-            return contains_(root_->righ_, c, !isXDimension);
+            return contains_(root->righ_, c, !isXDimension);
         else
-            return contains_(root_->left_, c, !isXDimension);
+            return contains_(root->left_, c, !isXDimension);
     }
     else
     {
-        if (c.y_ > root_->c_.y_)
-            return contains_(root_->righ_, c, !isXDimension);
+        if (c.y_ > root->c_.y_)
+            return contains_(root->righ_, c, !isXDimension);
         else
             return contains_(root->left_, c, !isXDimension);        
     }
@@ -120,31 +120,31 @@ std::vector<Coordinate> KDTree::search(const Rectangle& r) const
 }
 
 void KDTree::search_(const Node* root, 
-                                std::vector<Coordinate> coords, 
+                                std::vector<Coordinate>& coords, 
                                 const Rectangle& r, bool isXDimension) const
 {
-    if (root_ == nullptr)
+    if (root == nullptr)
         return; // Ponto de parada
 
-    if (r.contains(root_->c_)) // Verifica todas as dimensões disponíveis (X e Y)
-        coords.push_back(root_->c_);
+    if (r.contains(root->c_)) // Verifica todas as dimensões disponíveis (X e Y)
+        coords.push_back(root->c_);
 
     // Verificando qual dos lados deve ser consultado para a pesquisa atual
     if(isXDimension)
     {
         // Verifica se as dimensões de X estão dentro do intervalo
-        if (r.ll_.x_ <= root_->c_.x_) // Verifica se a raiz está do lado direito de xmin
-            search_(root_->left_, coords, r, !isXDimension);
-        if (r.ur_.x_ >= root_->c_.x_) // Verifica se a raiz está do lado esquerdo de xmax
-            search_(root_->righ_, coords, r, !isXDimension);
+        if (r.ll_.x_ <= root->c_.x_) // Verifica se a raiz está do lado direito de xmin
+            search_(root->left_, coords, r, !isXDimension);
+        if (r.ur_.x_ >= root->c_.x_) // Verifica se a raiz está do lado esquerdo de xmax
+            search_(root->righ_, coords, r, !isXDimension);
     }
     else
     {
         // Verifica se as dimensões de Y estão dentro do intervalo
-        if (r.ll_.y_ <= root_->c_.y_) // Verifica se a raiz está acima de ymin
-            search_(root_->left_, coords, r, !isXDimension);
-        if (r.ur_.y_ >= root_->c_.y_) // Verifica se a raiz está abaixo de ymax
-            search_(root_->righ_, coords, r, !isXDimension);
+        if (r.ll_.y_ <= root->c_.y_) // Verifica se a raiz está acima de ymin
+            search_(root->left_, coords, r, !isXDimension);
+        if (r.ur_.y_ >= root->c_.y_) // Verifica se a raiz está abaixo de ymax
+            search_(root->righ_, coords, r, !isXDimension);
     }
 
     return;

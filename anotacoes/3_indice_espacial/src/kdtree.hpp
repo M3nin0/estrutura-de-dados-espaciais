@@ -29,7 +29,7 @@ private:
     Node* root_;
 
     bool contains_(Node* root, const Coordinate& c, bool isXDimension) const;
-    void search_(const Node* root, std::vector<Coordinate> coords, 
+    void search_(const Node* root, std::vector<Coordinate>& coords, 
                                     const Rectangle& r, bool isXDimension) const;
 };
 
